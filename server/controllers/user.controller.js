@@ -1,6 +1,6 @@
 const { comparePassword } = require('../helpers/bcrypt');
 const { generateToken } = require('../helpers/jwt');
-const User = require('../models');
+const { User } = require('../models');
 const { OAuth2Client } = require('google-auth-library');
 
 class UserController {

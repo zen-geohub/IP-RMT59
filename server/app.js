@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.use(require('./routes/index'));
+app.use('/api', require('./routes/index'));
 
 app.use(errorHandler);
 

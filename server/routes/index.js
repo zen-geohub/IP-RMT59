@@ -6,5 +6,6 @@ router.get('/', (req, res) => {
 });
 
 router.use(require('./user.routes'));
+router.use(require('./maps_data.routes'));
 
 module.exports = router;
