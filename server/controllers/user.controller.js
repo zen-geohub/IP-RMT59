@@ -16,7 +16,7 @@ class UserController {
 
       const payload = ticket.getPayload();
 
-      const user = await User.findOrCreate({
+      const [userInstance, created] = await User.findOrCreate({
         where: { email: payload.email },
         defaults: {
           email: payload.email,
@@ -27,9 +27,9 @@ class UserController {
         }
       });
 
-      const access_token = generateToken({ id: user['id'] });
+      const access_token = generateToken({ id: userInstance['id'] });
 
-      res.status(200).json({ access_token, firstName: user['firstName'], lastName: user['lastName'], profilePicture: user['profilePicture'] });
+      res.status(200).json({ access_token, firstName: userInstance['firstName'], lastName: userInstance['lastName'], profilePicture: userInstance['profilePicture'] });
     } catch (error) {
       next(error);
     }
