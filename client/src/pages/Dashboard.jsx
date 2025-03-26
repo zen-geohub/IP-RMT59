@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import http from "../helpers/http";
 import { fetchGeodata } from "../../stores/geodata.slice";
@@ -26,7 +26,6 @@ const Dashboard = () => {
         }
       });
 
-      console.log(data)
       dispatch(fetchGeodata(data['geojson']));
     } catch (error) {
       console.error(error);
