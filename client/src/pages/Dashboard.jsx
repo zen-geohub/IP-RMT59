@@ -21,9 +21,13 @@ const Dashboard = () => {
           latitude: userCoordinate.latitude || -6.175444700801496,
           longitude: userCoordinate.longitude || 106.82716801354516,
         },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        }
       });
 
-      dispatch(fetchGeodata(data));
+      console.log(data)
+      dispatch(fetchGeodata(data['geojson']));
     } catch (error) {
       console.error(error);
     }
@@ -38,7 +42,10 @@ const Dashboard = () => {
   }, [data]);
 
   return (
-    <div className="w-full h-dvh">
+    <div className="relative w-full h-dvh">
+      <div className="absolute top-2 left-2 w-48 h-96 bg-black rounded-lg z-50">
+
+      </div>
       <Map setCoordinate={setUserCoordinate} />
     </div>
   );
