@@ -3,14 +3,29 @@ const { UserPlace, Place, User } = require('../models');
 class UserPlacesController {
   static async createUserPlace(req, res, next) {
     try {
-      const { poi } = req.body;
+      const { properties, geometry } = req.body;
 
-      const [placeInstance, createdPlace] = await Place.findOrCreate({
-        where: { placeId: poi['placeId'] },
-        defaults: poi
+      const [placeInstance] = await Place.findOrCreate({
+        where: { 'properties.placeId': properties['placeId'] },
+        defaults: {
+          type: 'Feature',
+          properties: {
+            placeId: properties['placeId'],
+            displayName: properties['displayName'],
+            formattedAddress: properties['formattedAddress'],
+            primaryTypeDisplayName: properties['primaryTypeDisplayName'],
+            iconBaseMaskUri: properties['iconBaseMaskUri'],
+            iconBackgroundColor: properties['iconBackgroundColor'],
+            rating: properties['rating']
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: geometry['coordinates']
+          }
+        }
       });
 
-      const [userPlaceInstance, createdUserPlace] = await UserPlace.findOrCreate({
+      const [userPlaceInstance] = await UserPlace.findOrCreate({
         where: { PlaceId: placeInstance['id'], UserId: req.user['id'] },
         defaults: { PlaceId: placeInstance['id'], UserId: req.user['id'] }
       });
@@ -28,7 +43,6 @@ class UserPlacesController {
         include: [
           {
             model: Place,
-            attributes: ['id', 'displayName', 'formattedAddress', 'primaryTypeDisplayName', 'iconBaseMaskUri', 'iconBackgroundColor', 'rating']
           }
         ]
       });

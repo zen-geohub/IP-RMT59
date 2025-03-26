@@ -55,7 +55,7 @@ class MapsDataController {
               coordinates: [longitude, latitude]
             },
             properties: {
-              id,
+              placeId: id,
               displayName,
               formattedAddress,
               iconBackgroundColor,
@@ -80,7 +80,7 @@ class MapsDataController {
                   "coordinates": [longitude, latitude]
                 },
                 "properties": {
-                  "id": "string",
+                  "placeId": "string",
                   "displayName": "string",
                   "formattedAddress": "string",
                   "iconBackgroundColor": "string",
