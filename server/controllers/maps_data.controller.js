@@ -33,7 +33,19 @@ class MapsDataController {
 
       const geojson = {
         type: "FeatureCollection",
-        features: data['places'].map(({ id, displayName: { text: displayName }, formattedAddress, iconBackgroundColor, iconMaskBaseUri, location: { latitude, longitude }, primaryTypeDisplayName: { text: primaryTypeDisplayName }, rating, types }) => {
+        features: data?.places?.map((place) => {
+          const {
+            id = null,
+            displayName: { text: displayName } = { text: "Unknown" },
+            formattedAddress = "No address available",
+            iconBackgroundColor = "#ccc",
+            iconMaskBaseUri = "",
+            location: { latitude, longitude } = { latitude: 0, longitude: 0 },
+            primaryTypeDisplayName: { text: primaryTypeDisplayName } = { text: "N/A" },
+            rating = "N/A",
+            types = []
+          } = place || {};
+      
           return {
             type: "Feature",
             geometry: {
@@ -50,9 +62,9 @@ class MapsDataController {
               rating,
               types
             }
-          }
+          };
         })
-      }
+      };
 
       res.status(200).json(geojson);
     } catch (error) {
