@@ -1,7 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { geodataReducer } from './geodata.slice';
 
 const store = configureStore({
-  reducer: {},
+  reducer: { geodataReducer },
 });
 
 export default store;

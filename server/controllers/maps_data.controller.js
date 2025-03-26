@@ -15,7 +15,7 @@ class MapsDataController {
         headers: {
           "Content-Type": "application/json",
           "X-Goog-Api-Key": process.env.MAPS_API_KEY,
-          "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.types,places.location,places.rating,places.primaryType"
+          "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.types,places.location,places.rating,places.primaryTypeDisplayName,places.iconMaskBaseUri,places.iconBackgroundColor"
         },
         data: {
           "maxResultCount": 5,
@@ -31,7 +31,30 @@ class MapsDataController {
         }
       });
 
-      res.status(200).json(data);
+      const geojson = {
+        type: "FeatureCollection",
+        features: data['places'].map(({ id, displayName: { text: displayName }, formattedAddress, iconBackgroundColor, iconMaskBaseUri, location: { latitude, longitude }, primaryTypeDisplayName: { text: primaryTypeDisplayName }, rating, types }) => {
+          return {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [longitude, latitude]
+            },
+            properties: {
+              id,
+              displayName,
+              formattedAddress,
+              iconBackgroundColor,
+              iconMaskBaseUri,
+              primaryTypeDisplayName,
+              rating,
+              types
+            }
+          }
+        })
+      }
+
+      res.status(200).json(geojson);
     } catch (error) {
       next(error);
     }
