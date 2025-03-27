@@ -15,19 +15,27 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Place.init({
-    placeId: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    displayName: DataTypes.STRING,
-    formattedAddress: DataTypes.STRING,
-    primaryTypeDisplayName: DataTypes.STRING,
-    iconBaseMaskUri: DataTypes.STRING,
-    iconBackgroundColor: DataTypes.STRING,
-    rating: DataTypes.FLOAT
+    type: DataTypes.STRING,
+    properties: DataTypes.JSON,
+    geometry: DataTypes.JSON,
+    // placeId: {
+    //   type: DataTypes.STRING,
+    //   allowNull: false
+    // },
+    // displayName: DataTypes.STRING,
+    // formattedAddress: DataTypes.STRING,
+    // primaryTypeDisplayName: DataTypes.STRING,
+    // iconBaseMaskUri: DataTypes.STRING,
+    // iconBackgroundColor: DataTypes.STRING,
+    // rating: DataTypes.FLOAT
   }, {
     sequelize,
     modelName: 'Place',
   });
+
+  Place.beforeCreate((place, options) => {
+    place['type'] = 'Feature';
+  })
+
   return Place;
 };

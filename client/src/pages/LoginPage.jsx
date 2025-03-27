@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import http from "../helpers/http";
 import { NavLink, useNavigate } from "react-router";
+import { IoKey, IoMail } from "react-icons/io5";
+import bg from '../assets/undraw_location-search_nesh.svg'
 
 const LoginPage = () => {
   const [user, setUser] = useState({
@@ -25,7 +27,9 @@ const LoginPage = () => {
         },
       });
 
-      localStorage.setItem("access_token", data?.access_token);
+      const { access_token, ...restData } = data;
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("data", JSON.stringify(restData));
       localStorage.getItem("access_token") !== undefined
         ? navigate("/")
         : navigate("/login");
@@ -58,7 +62,9 @@ const LoginPage = () => {
             data: user,
           });
 
-          localStorage.setItem("access_token", data?.access_token);
+          const { access_token, ...restData } = data;
+          localStorage.setItem("access_token", access_token);
+          localStorage.setItem("data", JSON.stringify(restData));
           localStorage.getItem("access_token") !== undefined
             ? navigate("/")
             : navigate("/login");
@@ -66,27 +72,13 @@ const LoginPage = () => {
           console.error(error);
         }
       }}
-      className="w-full h-dvh flex justify-center items-center"
+      className="relative w-full h-dvh flex justify-center items-center overflow-hidden"
     >
-      <div className="flex flex-col bg-gray-50 p-2 rounded-xl">
+      <img src={bg} className="absolute -z-10 object-cover" />
+      <div className="flex flex-col bg-white p-4 rounded-xl shadow-2xl">
         <label className="input floating-label mb-2">
           <span>Email</span>
-          <svg
-            className="h-[1em] opacity-50"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
-            </g>
-          </svg>
+          <IoMail className="text-gray-500" />
           <input
             type="email"
             required
@@ -100,22 +92,7 @@ const LoginPage = () => {
 
         <label className="input floating-label mb-3">
           <span>Password</span>
-          <svg
-            className="h-[1em] opacity-50"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-          >
-            <g
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              strokeWidth="2.5"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path>
-              <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
-            </g>
-          </svg>
+          <IoKey className="text-gray-500" />
           <input
             type="password"
             required

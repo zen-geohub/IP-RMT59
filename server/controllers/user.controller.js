@@ -7,29 +7,38 @@ class UserController {
   static async googleLogin(req, res, next) {
     try {
       const { token } = req.body;
-
+  
+      if (!token) {
+        throw { name: 'BadRequest', message: 'Google token is required.' };
+      }
+  
       const client = new OAuth2Client();
       const ticket = await client.verifyIdToken({
         idToken: token,
-        audience: process.env.GOOGLE_CLIENT_ID
+        audience: process.env.GOOGLE_CLIENT_ID,
       });
-
+  
       const payload = ticket.getPayload();
-
+  
       const [userInstance, created] = await User.findOrCreate({
         where: { email: payload.email },
         defaults: {
           email: payload.email,
-          password: `${require('crypto').randomBytes(20).toString('hex')}`,
+          password: require('crypto').randomBytes(20).toString('hex'),
           firstName: payload.given_name,
           lastName: payload.family_name,
-          profilePicture: payload.picture
-        }
+          profilePicture: payload.picture,
+        },
       });
-
-      const access_token = generateToken({ id: userInstance['id'] });
-
-      res.status(200).json({ access_token, firstName: userInstance['firstName'], lastName: userInstance['lastName'], profilePicture: userInstance['profilePicture'] });
+  
+      const access_token = generateToken({ id: userInstance.id });
+  
+      res.status(200).json({
+        access_token,
+        firstName: userInstance.firstName,
+        lastName: userInstance.lastName,
+        profilePicture: userInstance.profilePicture,
+      });
     } catch (error) {
       next(error);
     }
@@ -74,6 +83,7 @@ class UserController {
       }
 
       const access_token = generateToken({ id: user['id'] });
+      console.log(user)
 
       res.status(200).json({ access_token, firstName: user['firstName'], lastName: user['lastName'], profilePicture: user['profilePicture'] });
     } catch (error) {

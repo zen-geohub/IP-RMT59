@@ -9,28 +9,40 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      placeId: {
+      type: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      displayName: {
-        type: Sequelize.STRING
+      properties: {
+        allowNull: false,
+        type: Sequelize.JSON
       },
-      formattedAddress: {
-        type: Sequelize.STRING
+      geometry: {
+        allowNull: false,
+        type: Sequelize.JSON
       },
-      primaryTypeDisplayName: {
-        type: Sequelize.STRING
-      },
-      iconBaseMaskUri: {
-        type: Sequelize.STRING
-      },
-      iconBackgroundColor: {
-        type: Sequelize.STRING
-      },
-      rating: {
-        type: Sequelize.FLOAT
-      },
+      // placeId: {
+      //   allowNull: false,
+      //   type: Sequelize.STRING
+      // },
+      // displayName: {
+      //   type: Sequelize.STRING
+      // },
+      // formattedAddress: {
+      //   type: Sequelize.STRING
+      // },
+      // primaryTypeDisplayName: {
+      //   type: Sequelize.STRING
+      // },
+      // iconBaseMaskUri: {
+      //   type: Sequelize.STRING
+      // },
+      // iconBackgroundColor: {
+      //   type: Sequelize.STRING
+      // },
+      // rating: {
+      //   type: Sequelize.FLOAT
+      // },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

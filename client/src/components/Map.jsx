@@ -1,27 +1,45 @@
 import {
   GeolocateControl,
-  Layer,
   Map as Maplibre,
   Marker,
   NavigationControl,
   Popup,
-  Source,
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
+import http from "../helpers/http";
 
-const Map = ({ setCoordinate }) => {
+const Map = ({ setCoordinate, refreshList, category }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const { data } = useSelector((state) => state["geodataReducer"]);
+  const { list } = useSelector((state) => state["userFavoriteReducer"]);
   const geoControlRef = useRef(null);
 
   useEffect(() => {
     geoControlRef.current?.trigger();
   }, []);
 
+  async function handleFavorite() {
+    try {
+      await http({
+        method: "POST",
+        url: "/favorites",
+        data: selectedPlace,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+
+      refreshList();
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   return (
     <Maplibre
+      id="dashboardMap"
       initialViewState={{
         latitude: -6.175444700801496,
         longitude: 106.82716801354516,
@@ -37,7 +55,6 @@ const Map = ({ setCoordinate }) => {
         position="bottom-right"
         positionOptions={{ enableHighAccuracy: true }}
         fitBoundsOptions={{ linear: true }}
-        // trackUserLocation={true}
         onGeolocate={(e) =>
           setCoordinate({
             latitude: e.coords.latitude,
@@ -46,9 +63,11 @@ const Map = ({ setCoordinate }) => {
         }
       />
       {data &&
-        data["features"].map(({ geometry, properties }) => (
+        data["features"]
+        .filter(({ properties }) => category ? properties["primaryTypeDisplayName"] === category : true)
+        .map(({ geometry, properties }) => (
           <Marker
-            key={properties["id"]}
+            key={properties["placeId"]}
             latitude={geometry["coordinates"][1]}
             longitude={geometry["coordinates"][0]}
             onClick={() => setSelectedPlace({ properties, geometry })}
@@ -78,6 +97,7 @@ const Map = ({ setCoordinate }) => {
             <h3 className="font-bold text-xl text-center">
               {selectedPlace.properties.displayName}
             </h3>
+
             <hr />
             <p>
               <strong>Type:</strong>{" "}
@@ -88,11 +108,28 @@ const Map = ({ setCoordinate }) => {
               {selectedPlace.properties.formattedAddress || "N/A"}
             </p>
             <p>
-              <strong>Rating:</strong>{" "}
-              &#127775;{selectedPlace.properties.rating || "N/A"}
+              <strong>Rating:</strong> &#127775;
+              {selectedPlace.properties.rating || "N/A"}
             </p>
           </div>
-          <button className="btn btn-secondary">Add to favorite</button>
+
+          <div className="flex justify-end">
+            <button
+              className={
+                Array.isArray(list) &&
+                selectedPlace?.properties?.placeId &&
+                list.some(
+                  ({ Place: { properties } }) =>
+                    properties["placeId"] === selectedPlace.properties.placeId
+                )
+                  ? "btn btn-disabled"
+                  : "btn btn-secondary"
+              }
+              onClick={handleFavorite}
+            >
+              Add to favorite
+            </button>
+          </div>
         </Popup>
       )}
     </Maplibre>
