@@ -2,6 +2,7 @@ import { useState } from "react";
 import http from "../helpers/http";
 import { NavLink, useNavigate } from "react-router";
 import { IoKey, IoMail, IoPersonSharp } from "react-icons/io5";
+import bg from "../assets/undraw_travel-booking_1t44.svg";
 
 const RegisterPage = () => {
   const [user, setUser] = useState({
@@ -29,9 +30,10 @@ const RegisterPage = () => {
           console.error(error);
         }
       }}
-      className="w-full h-dvh flex justify-center items-center"
+      className="relative w-full h-dvh flex justify-center items-center overflow-hidden"
     >
-      <div className="flex flex-col bg-gray-50 p-2 rounded-xl">
+      <img src={bg} alt="bg" className="absolute -z-10 object-cover" />
+      <div className="flex flex-col bg-white p-4 rounded-xl shadow-2xl">
         <label className="input floating-label mb-2">
           <span>First Name</span>
           <IoPersonSharp className="text-gray-500" />

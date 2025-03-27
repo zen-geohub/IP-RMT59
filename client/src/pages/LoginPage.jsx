@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import http from "../helpers/http";
 import { NavLink, useNavigate } from "react-router";
 import { IoKey, IoMail } from "react-icons/io5";
+import bg from '../assets/undraw_location-search_nesh.svg'
 
 const LoginPage = () => {
   const [user, setUser] = useState({
@@ -26,7 +27,9 @@ const LoginPage = () => {
         },
       });
 
-      localStorage.setItem("access_token", data?.access_token);
+      const { access_token, ...restData } = data;
+      localStorage.setItem("access_token", access_token);
+      localStorage.setItem("data", JSON.stringify(restData));
       localStorage.getItem("access_token") !== undefined
         ? navigate("/")
         : navigate("/login");
@@ -59,7 +62,9 @@ const LoginPage = () => {
             data: user,
           });
 
-          localStorage.setItem("access_token", data?.access_token);
+          const { access_token, ...restData } = data;
+          localStorage.setItem("access_token", access_token);
+          localStorage.setItem("data", JSON.stringify(restData));
           localStorage.getItem("access_token") !== undefined
             ? navigate("/")
             : navigate("/login");
@@ -67,9 +72,10 @@ const LoginPage = () => {
           console.error(error);
         }
       }}
-      className="w-full h-dvh flex justify-center items-center"
+      className="relative w-full h-dvh flex justify-center items-center overflow-hidden"
     >
-      <div className="flex flex-col bg-gray-50 p-2 rounded-xl">
+      <img src={bg} className="absolute -z-10 object-cover" />
+      <div className="flex flex-col bg-white p-4 rounded-xl shadow-2xl">
         <label className="input floating-label mb-2">
           <span>Email</span>
           <IoMail className="text-gray-500" />

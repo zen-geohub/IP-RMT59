@@ -4,7 +4,7 @@
   "main": "bin/www",
   "scripts": {
     "dev": "npx nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage --detectOpenHandles"
   },
   "keywords": [],
   "author": "",

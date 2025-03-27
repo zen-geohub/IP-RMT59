@@ -7,7 +7,7 @@ router.get('/test', (req, res) => {
 });
 
 router.use(require('./user.routes'));
-router.use(authentication, require('./maps_data.routes'));
+router.use(require('./maps_data.routes'));
 router.use(authentication, require('./userplaces.routes'));
 
 module.exports = router;

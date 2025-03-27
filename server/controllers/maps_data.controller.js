@@ -17,10 +17,10 @@ class MapsDataController {
         headers: {
           "Content-Type": "application/json",
           "X-Goog-Api-Key": process.env.MAPS_API_KEY,
-          "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.types,places.location,places.rating,places.primaryTypeDisplayName,places.iconMaskBaseUri,places.iconBackgroundColor"
+          "X-Goog-FieldMask": "places.photos,places.id,places.displayName,places.formattedAddress,places.types,places.location,places.rating,places.primaryTypeDisplayName,places.iconMaskBaseUri,places.iconBackgroundColor"
         },
         data: {
-          "maxResultCount": 5,
+          // "maxResultCount": 5,
           "locationRestriction": {
             "circle": {
               "center": {
@@ -45,7 +45,6 @@ class MapsDataController {
             location: { latitude, longitude } = { latitude: 0, longitude: 0 },
             primaryTypeDisplayName: { text: primaryTypeDisplayName } = { text: "N/A" },
             rating = "N/A",
-            types = []
           } = place || {};
 
           return {
@@ -62,7 +61,6 @@ class MapsDataController {
               iconMaskBaseUri,
               primaryTypeDisplayName,
               rating,
-              types
             }
           };
         })
@@ -87,13 +85,12 @@ class MapsDataController {
                   "iconMaskBaseUri": "string",
                   "primaryTypeDisplayName": "string",
                   "rating": "string",
-                  "types": ["string"]
                 }
               }
           Return: Array<Feature>
         `,
       });
-      
+
       const result = response['text'].replace('```json', '').replace('```', '');
 
       res.status(200).json({ geojson, response: JSON.parse(result) });

@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import http from "../helpers/http";
 
-const Map = ({ setCoordinate, refreshList }) => {
+const Map = ({ setCoordinate, refreshList, category }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const { data } = useSelector((state) => state["geodataReducer"]);
   const { list } = useSelector((state) => state["userFavoriteReducer"]);
@@ -63,7 +63,9 @@ const Map = ({ setCoordinate, refreshList }) => {
         }
       />
       {data &&
-        data["features"].map(({ geometry, properties }) => (
+        data["features"]
+        .filter(({ properties }) => category ? properties["primaryTypeDisplayName"] === category : true)
+        .map(({ geometry, properties }) => (
           <Marker
             key={properties["placeId"]}
             latitude={geometry["coordinates"][1]}
@@ -95,6 +97,7 @@ const Map = ({ setCoordinate, refreshList }) => {
             <h3 className="font-bold text-xl text-center">
               {selectedPlace.properties.displayName}
             </h3>
+
             <hr />
             <p>
               <strong>Type:</strong>{" "}
@@ -109,21 +112,24 @@ const Map = ({ setCoordinate, refreshList }) => {
               {selectedPlace.properties.rating || "N/A"}
             </p>
           </div>
-          <button
-            className={
-              Array.isArray(list) &&
-              selectedPlace?.properties?.placeId &&
-              list.some(
-                ({ Place: { properties } }) =>
-                  properties["placeId"] === selectedPlace.properties.placeId
-              )
-                ? "btn btn-disabled"
-                : "btn btn-secondary"
-            }
-            onClick={handleFavorite}
-          >
-            Add to favorite
-          </button>
+
+          <div className="flex justify-end">
+            <button
+              className={
+                Array.isArray(list) &&
+                selectedPlace?.properties?.placeId &&
+                list.some(
+                  ({ Place: { properties } }) =>
+                    properties["placeId"] === selectedPlace.properties.placeId
+                )
+                  ? "btn btn-disabled"
+                  : "btn btn-secondary"
+              }
+              onClick={handleFavorite}
+            >
+              Add to favorite
+            </button>
+          </div>
         </Popup>
       )}
     </Maplibre>
